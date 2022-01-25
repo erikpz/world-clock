@@ -7,8 +7,9 @@ import { RowClock } from "./RowClock";
 
 const ClockContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  width: "60%",
-  maxWidth: 900,
+  /* width: "60%",
+  maxWidth: 900, */
+  width: 1000,
   padding: "35px 45px",
   margin: "30px 0",
   borderRadius: 20,
@@ -58,7 +59,8 @@ export const WorldClock: FC = () => {
     if (value) {
       try {
         let locExists = false;
-        const location = search.label.replace(" ", "_");
+        const location = search.label.replaceAll(" ", "_");
+        console.log(location);
         const timeService = TimeService.getInstance();
         const response = await timeService.getTimeLocations(
           search.area,
@@ -78,15 +80,22 @@ export const WorldClock: FC = () => {
     }
   };
 
+  const handleRemove = (element: any) => {
+    const newList = list.filter(
+      (filt: any) => filt.element.label !== element.element.label
+    );
+    setlist(newList);
+  };
+
   useEffect(() => {
     /* console.log("search", search); */
     /*  console.log(results); */
     /* console.log("Lista:", list); */
   });
 
-  /* useEffect(() => {
-    setsearch(null);
-  }, [list]); */
+  useEffect(() => {
+    console.log(list);
+  }, [list]);
 
   useEffect(() => {
     const fetchDefault = async () => {
@@ -125,11 +134,18 @@ export const WorldClock: FC = () => {
         )}
       />
 
-      <Box>
-        {list.map((location: any) => (
-          <RowClock location={location} key={location.element.label} />
-        ))}
-      </Box>
+      {list.length > 0 && (
+        <Box sx={{ mt: 2 }}>
+          {list.map((location: any, index: number) => (
+            <RowClock
+              location={location}
+              key={location.element.label}
+              handleRemove={() => handleRemove(location)}
+              first={index === 0}
+            />
+          ))}
+        </Box>
+      )}
     </ClockContainer>
   );
 };
