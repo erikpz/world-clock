@@ -60,7 +60,6 @@ export const WorldClock: FC = () => {
       try {
         let locExists = false;
         const location = search.label.replaceAll(" ", "_");
-        console.log(location);
         const timeService = TimeService.getInstance();
         const response = await timeService.getTimeLocations(
           search.area,
@@ -87,15 +86,9 @@ export const WorldClock: FC = () => {
     setlist(newList);
   };
 
-  useEffect(() => {
-    /* console.log("search", search); */
-    /*  console.log(results); */
-    /* console.log("Lista:", list); */
-  });
-
-  useEffect(() => {
+  /*  useEffect(() => {
     console.log(list);
-  }, [list]);
+  }, [list]); */
 
   useEffect(() => {
     const fetchDefault = async () => {
@@ -138,10 +131,11 @@ export const WorldClock: FC = () => {
         <Box sx={{ mt: 2 }}>
           {list.map((location: any, index: number) => (
             <RowClock
-              location={location}
               key={location.element.label}
-              handleRemove={() => handleRemove(location)}
               first={index === 0}
+              homeLocation={list[0]}
+              location={location}
+              handleRemove={() => handleRemove(location)}
             />
           ))}
         </Box>
