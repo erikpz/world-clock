@@ -11,7 +11,6 @@ interface RowClockProps {
 }
 
 const RowContainer = styled(Box)(({ theme }) => ({
-  /* backgroundColor: "lightgreen", */
   height: 80,
   display: "flex",
   alignItems: "center",
@@ -22,10 +21,11 @@ export const RowClock: FC<RowClockProps> = (props) => {
   const { location, handleRemove, homeLocation, first } = props;
   const [locTime, setlocTime] = useState<any>();
   const [homeTime, sethomeTime] = useState<any>();
+  console.log(location);
 
   const getDifference = () => {
     if (locTime && homeTime) {
-      return Math.ceil((homeTime - locTime) / (1000 * 60 * 60));
+      return Math.floor((locTime - homeTime) / (1000 * 60 * 60));
     }
     return "";
   };
@@ -55,9 +55,11 @@ export const RowClock: FC<RowClockProps> = (props) => {
       {first ? (
         <Home fontSize="small" />
       ) : (
-        <Typography align="center" variant="h6" sx={{ width: "20px" }}>
-          {getDifference()}
-        </Typography>
+        <IconButton sx={{ color: "#000", p: 0 }}>
+          <Typography align="center" variant="h6" sx={{ width: "20px" }}>
+            {getDifference()}
+          </Typography>
+        </IconButton>
       )}
 
       <Box sx={{ width: 200 }}>
@@ -84,13 +86,44 @@ export const RowClock: FC<RowClockProps> = (props) => {
         </Typography>
       </Box>
 
-      {/* <Box
-        sx={{ backgroundColor: "lightgreen", alignSelf: "stretch", flex: 1, display:'flex' }}
+      <Box
+        sx={{
+          /* backgroundColor: "lightgreen", */
+          alignSelf: "stretch",
+          flex: 1,
+          display: "flex",
+          alignItems: "center",
+        }}
       >
-        {[1, 2, 3, 4, 5, 6, 7].map((n: number) => (
-          <p>{n}</p>
+        {[
+          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+          21, 22,
+        ].map((n: number) => (
+          <Box
+            key={n}
+            sx={{
+             /*  bgcolor: "lightblue", */
+              padding: "2px",
+              width: 25,
+              height: 45,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              gap: "3px",
+            }}
+          >
+            <Typography align="center" sx={{ fontWeight: 600 }}>
+              {n}
+            </Typography>
+            <Typography
+              sx={{ textAlign: "center", display: "block", fontWeight: 500 }}
+              variant="caption"
+            >
+              pm
+            </Typography>
+          </Box>
         ))}
-      </Box> */}
+      </Box>
     </RowContainer>
   );
 };

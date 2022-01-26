@@ -5,13 +5,15 @@ import { TimeService } from "../services/TimeService";
 import { areas } from "../utils/areas";
 import { RowClock } from "./RowClock";
 
+const Container = styled(Box)(({ theme }) => ({
+  width: "100%",
+}));
+
 const ClockContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  /* width: "60%",
-  maxWidth: 900, */
   width: 1000,
-  padding: "35px 45px",
-  margin: "30px 0",
+  padding: "35px 25px",
+  margin: "30px auto",
   borderRadius: 20,
   boxShadow:
     "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px",
@@ -108,38 +110,39 @@ export const WorldClock: FC = () => {
   }, []);
 
   return (
-    <ClockContainer>
-      <Autocomplete
-        freeSolo
-        disablePortal
-        clearOnBlur
-        clearOnEscape
-        options={results}
-        onChange={handleFetch}
-        onHighlightChange={(e: any, sel: any) => setsearch(sel)}
-        onInputChange={(e: any, newInput: string) => handleSearch(newInput)}
-        sx={{ width: 300 }}
-        renderInput={(params: any) => (
-          <InputSearch
-            {...params}
-            placeholder="Find place or timezone - Press 'Enter'"
-          />
-        )}
-      />
-
-      {list.length > 0 && (
-        <Box sx={{ mt: 2 }}>
-          {list.map((location: any, index: number) => (
-            <RowClock
-              key={location.element.label}
-              first={index === 0}
-              homeLocation={list[0]}
-              location={location}
-              handleRemove={() => handleRemove(location)}
+    <Container>
+      <ClockContainer>
+        <Autocomplete
+          freeSolo
+          clearOnBlur
+          clearOnEscape
+          options={results}
+          onChange={handleFetch}
+          onHighlightChange={(e: any, sel: any) => setsearch(sel)}
+          onInputChange={(e: any, newInput: string) => handleSearch(newInput)}
+          sx={{ width: 300 }}
+          renderInput={(params: any) => (
+            <InputSearch
+              {...params}
+              placeholder="Find place or timezone - Press 'Enter'"
             />
-          ))}
-        </Box>
-      )}
-    </ClockContainer>
+          )}
+        />
+
+        {list.length > 0 && (
+          <Box sx={{ mt: 2 }}>
+            {list.map((location: any, index: number) => (
+              <RowClock
+                key={location.element.label}
+                first={index === 0}
+                homeLocation={list[0]}
+                location={location}
+                handleRemove={() => handleRemove(location)}
+              />
+            ))}
+          </Box>
+        )}
+      </ClockContainer>
+    </Container>
   );
 };

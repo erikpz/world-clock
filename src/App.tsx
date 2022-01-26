@@ -5,16 +5,21 @@ import { Box, Typography } from "@mui/material";
 
 const AppContainer = styled(Box)(({ theme }) => ({
   minHeight: "100vh",
+  width: "100vw",
   display: "flex",
   flexDirection: "column",
-  justifyContent: "center",
   alignItems: "center",
+  justifyContent: "center",
 }));
 
 const App = () => {
   return (
     <AppContainer>
-      <Typography variant="h2" sx={{ color: "#FFF", fontWeight: 800 }}>
+      <Typography
+        variant="h2"
+        align="center"
+        sx={{ color: "#FFF", fontWeight: 800, width: "100%" }}
+      >
         WorldTimeLite
       </Typography>
       <WorldClock />
