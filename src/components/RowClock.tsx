@@ -80,7 +80,6 @@ export const RowClock: FC<RowClockProps> = (props) => {
           hArr = [...hArr, hour + i];
         }
       }
-      console.log(hArr);
       return hArr;
     }
     return hArr;
@@ -105,7 +104,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
   useEffect(() => {
     resetPos();
-  }, [locTime]);
+  }, [locTime, first]);
 
   return (
     <RowContainer>
