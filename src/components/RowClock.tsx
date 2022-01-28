@@ -61,17 +61,18 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
   const getBorders = (num: number) => {
     if (num === 23) {
-      return "8px 0 0 8px";
-    } else if (num === 0) {
       return "0 8px 8px 0";
+    } else if (num === 0) {
+      return "8px 0 0 8px";
     }
     return 0;
   };
 
   const getHoursArray = () => {
     let hArr: number[] = [];
-    if (locTime && !first) {
-      const hour = locTime.getHours();
+    if (locTime && homeTime) {
+      let hour = first ? homeTime.getHours() : locTime.getHours();
+      hour--;
       for (let i = -hour; i < 24 - hour; i++) {
         if (i < 0) {
           hArr = [...hArr, i];
@@ -82,10 +83,8 @@ export const RowClock: FC<RowClockProps> = (props) => {
         }
       }
       hArr = hArr.map((e: number) => (e >= 0 ? e : e * -1));
+      hArr = [...hArr].reverse();
       return hArr;
-    }
-    for (let i = 0; i < 24; i++) {
-      hArr = [...hArr, i];
     }
     return hArr;
   };
@@ -188,7 +187,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
             >
               <Typography
                 align="center"
-                sx={{ fontSize: "14px", fontWeight: 600 }}
+                sx={{ fontSize: "12px", fontWeight: 600 }}
               >
                 {n === 0
                   ? locTime?.toLocaleDateString("en-US", {
