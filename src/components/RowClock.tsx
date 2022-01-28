@@ -69,10 +69,8 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
   const getHoursArray = () => {
     let hArr: number[] = [];
-    /*    if (locTime && !locHome) { */
     if (locTime && homeTime) {
       let hour = first ? homeTime.getHours() : locTime.getHours();
-      /* let hour = locTime.getHours(); */
       for (let i = 0; i < 24; i++) {
         if (hour + i > 23) {
           hArr = [...hArr, hour + i - 24];
@@ -83,6 +81,43 @@ export const RowClock: FC<RowClockProps> = (props) => {
       return hArr;
     }
     return hArr;
+  };
+
+  const getNextDay = () => {
+    const hrs = getHoursArray();
+    if (hrs[0] === 0) {
+      return locTime?.getDate();
+    }
+    return locTime?.getDate() + 1;
+  };
+
+  const getNextMonth = () => {
+    if (locTime) {
+      const hrs = getHoursArray();
+      const lastDayMonth = new Date(
+        locTime.getFullYear(),
+        locTime.getMonth() + 1,
+        0
+      ).getDate();
+      let res;
+      if (hrs[0] === 0) {
+        res = locTime.toLocaleDateString("en-US", {
+          month: "short",
+        });
+        return res;
+      }
+      if (locTime.getDate() === lastDayMonth) {
+        let next: any = new Date(locTime.getFullYear(), locTime.getMonth() + 1);
+        res = next.toLocaleDateString("en-US", {
+          month: "short",
+        });
+        return res;
+      }
+      return locTime.toLocaleDateString("en-US", {
+        month: "short",
+      });
+    }
+    return "";
   };
 
   useEffect(() => {
@@ -184,11 +219,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                 align="center"
                 sx={{ fontSize: "12px", fontWeight: 600 }}
               >
-                {n === 0
-                  ? locTime?.toLocaleDateString("en-US", {
-                      month: "short",
-                    })
-                  : n}
+                {n === 0 ? getNextMonth() : n}
               </Typography>
               <Typography
                 sx={{
@@ -199,7 +230,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                 }}
                 variant="caption"
               >
-                {n === 0 ? locTime?.getDate() : n > 11 ? "pm" : "am"}
+                {n === 0 ? getNextDay() : n > 11 ? "pm" : "am"}
               </Typography>
             </Box>
           </Box>
