@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, IconButton, Typography } from "@mui/material";
 import { Delete, Home } from "@mui/icons-material";
@@ -7,10 +7,12 @@ interface RowClockProps {
   location: any;
   handleRemove: any;
   homeLocation: any;
+  setPos: any;
   first?: boolean;
 }
 
 const RowContainer = styled(Box)(({ theme }) => ({
+  /* backgroundColor:'lightblue', */
   height: 80,
   display: "flex",
   alignItems: "center",
@@ -21,7 +23,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
   const { location, handleRemove, homeLocation, first } = props;
   const [locTime, setlocTime] = useState<any>();
   const [homeTime, sethomeTime] = useState<any>();
-  console.log(location);
+  const ref = useRef<any>();
 
   const getDifference = () => {
     if (locTime && homeTime) {
@@ -46,6 +48,15 @@ export const RowClock: FC<RowClockProps> = (props) => {
       )
     );
   }, []);
+
+  useEffect(() => {
+    if (locTime && first) {
+      let x = locTime.getHours();
+      x = x > 12 ? x - 12 : x;
+      console.log(x);
+      props.setPos(ref.current?.getBoundingClientRect().left + 29 * x);
+    }
+  }, [locTime]);
 
   return (
     <RowContainer>
@@ -87,36 +98,43 @@ export const RowClock: FC<RowClockProps> = (props) => {
       </Box>
 
       <Box
+        ref={ref}
         sx={{
-          /* backgroundColor: "lightgreen", */
+          backgroundColor: "lightgreen",
           alignSelf: "stretch",
-          flex: 1,
+          width: 600,
           display: "flex",
           alignItems: "center",
         }}
+        onMouseMove={(e: any) => {
+          props.setPos(e.target.getBoundingClientRect().left);
+        }}
       >
         {[
-          1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-          21, 22,
+          24, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+          21, 22, 23,
         ].map((n: number) => (
           <Box
             key={n}
             sx={{
-             /*  bgcolor: "lightblue", */
-              padding: "2px",
+              bgcolor: "lightblue",
+              padding: "0 2px",
               width: 25,
-              height: 45,
+              height: "100%",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               gap: "3px",
             }}
           >
-            <Typography align="center" sx={{ fontWeight: 600 }}>
-              {n}
-            </Typography>
+            <Typography align="center">{n}</Typography>
             <Typography
-              sx={{ textAlign: "center", display: "block", fontWeight: 500 }}
+              sx={{
+                textAlign: "center",
+                display: "block",
+                fontWeight: 500,
+                fontSize: "10px",
+              }}
               variant="caption"
             >
               pm

@@ -1,6 +1,6 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Autocomplete, Box, TextField } from "@mui/material";
+import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import { TimeService } from "../services/TimeService";
 import { areas } from "../utils/areas";
 import { RowClock } from "./RowClock";
@@ -44,6 +44,14 @@ export const WorldClock: FC = () => {
   const [search, setsearch] = useState<any>(null);
   const [results, setresults] = useState<any>([]);
   const [list, setlist] = useState<any>([]);
+  const [mous, setmous] = useState<any>(0);
+  const refbox = useRef<any>();
+  /* const hoursBox = refbox.current?.lastChild.lastChild ?? null;
+  if (hoursBox) {
+    const computed = window.getComputedStyle(hoursBox).getPropertyValue("width");
+    const computed = hoursBox.getBoundingClientRect();
+    console.log(computed);
+  } */
 
   const handleSearch = async (srch: string) => {
     let arr: any = [];
@@ -88,10 +96,6 @@ export const WorldClock: FC = () => {
     setlist(newList);
   };
 
-  /*  useEffect(() => {
-    console.log(list);
-  }, [list]); */
-
   useEffect(() => {
     const fetchDefault = async () => {
       const timeService = TimeService.getInstance();
@@ -130,7 +134,29 @@ export const WorldClock: FC = () => {
         />
 
         {list.length > 0 && (
-          <Box sx={{ mt: 2 }}>
+          <Box
+            ref={refbox}
+            sx={{ bgcolor: "lightyellow", mt: 2, position: "relative" }}
+          >
+            {refbox.current && (
+              <Box
+                sx={{
+                  cursor: "pointer",
+                  position: "absolute",
+                  width: 25,
+                  boxSizing: "border-box",
+                  height: 80 * list.length,
+                  border: "2px solid #F49C76",
+                  borderRadius: 1,
+                  top: 0,
+                  backgroundColor: "rgba(244, 156, 118,0.3)",
+                  left: mous - refbox.current.getBoundingClientRect().left,
+                  /* left: (x && x.offsetLeft) ?? 0, */
+                  /* left: mous - (x ? x.offsetWidth : 0) ?? 0, */
+                }}
+              />
+            )}
+
             {list.map((location: any, index: number) => (
               <RowClock
                 key={location.element.label}
@@ -138,6 +164,7 @@ export const WorldClock: FC = () => {
                 homeLocation={list[0]}
                 location={location}
                 handleRemove={() => handleRemove(location)}
+                setPos={setmous}
               />
             ))}
           </Box>
