@@ -35,9 +35,8 @@ export const RowClock: FC<RowClockProps> = (props) => {
   const resetPos = () => {
     if (locTime && first) {
       let currentTime = locTime.getHours();
-      props.setPos(
-        ref.current?.getBoundingClientRect().left + 25 * currentTime
-      );
+      let pos = getHoursArray().indexOf(currentTime);
+      props.setPos(ref.current?.getBoundingClientRect().left + 25 * pos);
     }
   };
 
@@ -70,25 +69,22 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
   const getHoursArray = () => {
     let hArr: number[] = [];
+    /*    if (locTime && !locHome) { */
     if (locTime && homeTime) {
       let hour = first ? homeTime.getHours() : locTime.getHours();
-      hour--;
-      for (let i = -hour; i < 24 - hour; i++) {
-        if (i < 0) {
-          hArr = [...hArr, i];
-        } else if (24 - i === 24) {
-          hArr = [...hArr, 0];
+      /* let hour = locTime.getHours(); */
+      for (let i = 0; i < 24; i++) {
+        if (hour + i > 23) {
+          hArr = [...hArr, hour + i - 24];
         } else {
-          hArr = [...hArr, 24 - i];
+          hArr = [...hArr, hour + i];
         }
       }
-      hArr = hArr.map((e: number) => (e >= 0 ? e : e * -1));
-      hArr = [...hArr].reverse();
+      console.log(hArr);
       return hArr;
     }
     return hArr;
   };
-  getHoursArray();
 
   useEffect(() => {
     setlocTime(
@@ -204,7 +200,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                 }}
                 variant="caption"
               >
-                {n === 0 ? locTime?.getDate() : n > 12 ? "pm" : "am"}
+                {n === 0 ? locTime?.getDate() : n > 11 ? "pm" : "am"}
               </Typography>
             </Box>
           </Box>

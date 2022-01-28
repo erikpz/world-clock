@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import { TimeService } from "../services/TimeService";
 import { areas } from "../utils/areas";
 import { RowClock } from "./RowClock";
