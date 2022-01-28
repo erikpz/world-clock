@@ -32,6 +32,65 @@ export const RowClock: FC<RowClockProps> = (props) => {
     return "";
   };
 
+  const resetPos = () => {
+    if (locTime && first) {
+      let currentTime = locTime.getHours();
+      props.setPos(
+        ref.current?.getBoundingClientRect().left + 25 * currentTime
+      );
+    }
+  };
+
+  const getHourColor = (num: number, prop: string) => {
+    if (prop === "bg") {
+      if ([0, 1, 2, 3, 4, 5, 21, 22, 23].includes(num)) {
+        return "black";
+      } else if ([6, 7, 18, 19, 20].includes(num)) {
+        return "#DBEDFF";
+      } else {
+        return "white";
+      }
+    } else {
+      if ([0, 1, 2, 3, 4, 5, 21, 22, 23].includes(num)) {
+        return "white";
+      } else {
+        return "black";
+      }
+    }
+  };
+
+  const getBorders = (num: number) => {
+    if (num === 23) {
+      return "8px 0 0 8px";
+    } else if (num === 0) {
+      return "0 8px 8px 0";
+    }
+    return 0;
+  };
+
+  const getHoursArray = () => {
+    let hArr: number[] = [];
+    if (locTime && !first) {
+      const hour = locTime.getHours();
+      for (let i = -hour; i < 24 - hour; i++) {
+        if (i < 0) {
+          hArr = [...hArr, i];
+        } else if (24 - i === 24) {
+          hArr = [...hArr, 0];
+        } else {
+          hArr = [...hArr, 24 - i];
+        }
+      }
+      hArr = hArr.map((e: number) => (e >= 0 ? e : e * -1));
+      return hArr;
+    }
+    for (let i = 0; i < 24; i++) {
+      hArr = [...hArr, i];
+    }
+    return hArr;
+  };
+  getHoursArray();
+
   useEffect(() => {
     setlocTime(
       new Date(
@@ -50,12 +109,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
   }, []);
 
   useEffect(() => {
-    if (locTime && first) {
-      let x = locTime.getHours();
-      x = x > 12 ? x - 12 : x;
-      console.log(x);
-      props.setPos(ref.current?.getBoundingClientRect().left + 29 * x);
-    }
+    resetPos();
   }, [locTime]);
 
   return (
@@ -73,15 +127,17 @@ export const RowClock: FC<RowClockProps> = (props) => {
         </IconButton>
       )}
 
-      <Box sx={{ width: 200 }}>
-        <Typography>{location.element.label}</Typography>
+      <Box sx={{ width: 180 }}>
+        <Typography sx={{ fontSize: "14px" }}>
+          {location.element.label}
+        </Typography>
         <Typography variant="caption" sx={{ color: "#555" }}>
           {location.element.area}
         </Typography>
       </Box>
 
-      <Box sx={{ width: 110 }}>
-        <Typography>
+      <Box sx={{ width: 100 }}>
+        <Typography sx={{ fontSize: "14px" }}>
           {locTime?.toLocaleString("en-US", {
             hour: "numeric",
             minute: "numeric",
@@ -100,7 +156,6 @@ export const RowClock: FC<RowClockProps> = (props) => {
       <Box
         ref={ref}
         sx={{
-          backgroundColor: "lightgreen",
           alignSelf: "stretch",
           width: 600,
           display: "flex",
@@ -110,35 +165,49 @@ export const RowClock: FC<RowClockProps> = (props) => {
           props.setPos(e.target.getBoundingClientRect().left);
         }}
       >
-        {[
-          24, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
-          21, 22, 23,
-        ].map((n: number) => (
+        {getHoursArray().map((n: number, i: number) => (
           <Box
             key={n}
             sx={{
-              bgcolor: "lightblue",
-              padding: "0 2px",
               width: 25,
+              boxSizing: "border-box",
               height: "100%",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              gap: "3px",
             }}
           >
-            <Typography align="center">{n}</Typography>
-            <Typography
+            <Box
               sx={{
-                textAlign: "center",
-                display: "block",
-                fontWeight: 500,
-                fontSize: "10px",
+                width: "100%",
+                bgcolor: getHourColor(n, "bg"),
+                color: getHourColor(n, "col"),
+                borderRadius: getBorders(n),
+                padding: "5px 0",
               }}
-              variant="caption"
             >
-              pm
-            </Typography>
+              <Typography
+                align="center"
+                sx={{ fontSize: "14px", fontWeight: 600 }}
+              >
+                {n === 0
+                  ? locTime?.toLocaleDateString("en-US", {
+                      month: "short",
+                    })
+                  : n}
+              </Typography>
+              <Typography
+                sx={{
+                  textAlign: "center",
+                  display: "block",
+                  fontWeight: 400,
+                  fontSize: "10px",
+                }}
+                variant="caption"
+              >
+                {n === 0 ? locTime?.getDate() : n > 12 ? "pm" : "am"}
+              </Typography>
+            </Box>
           </Box>
         ))}
       </Box>

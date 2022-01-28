@@ -136,7 +136,7 @@ export const WorldClock: FC = () => {
         {list.length > 0 && (
           <Box
             ref={refbox}
-            sx={{ bgcolor: "lightyellow", mt: 2, position: "relative" }}
+            sx={{ /* bgcolor: "lightyellow", */ mt: 2, position: "relative" }}
           >
             {refbox.current && (
               <Box
@@ -144,6 +144,7 @@ export const WorldClock: FC = () => {
                   cursor: "pointer",
                   position: "absolute",
                   width: 25,
+                  padding: "0px 2px",
                   boxSizing: "border-box",
                   height: 80 * list.length,
                   border: "2px solid #F49C76",
