@@ -143,6 +143,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
   useEffect(() => {
     resetPos();
+    setchangeIcon(false);
   }, [list, first, locTime]);
 
   useEffect(() => {
