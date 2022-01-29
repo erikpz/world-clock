@@ -85,10 +85,6 @@ export const WorldClock: FC = () => {
     fetchDefault();
   }, []);
 
-  useEffect(() => {
-    console.log(list);
-  }, [list]);
-
   return (
     <Container>
       <ClockContainer>

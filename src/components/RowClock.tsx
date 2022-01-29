@@ -23,7 +23,15 @@ export const RowClock: FC<RowClockProps> = (props) => {
     /* Funcion para calcular la diferencia de hora entre la ciudad actual
     y la ciudad principal */
     if (locTime && homeTime) {
-      return Math.floor((locTime - homeTime) / (1000 * 60 * 60));
+      /*  const dif = Math.floor((locTime - homeTime) / (1000 * 60 * 60));
+      return dif; */
+      const dif = locTime.getDay() - homeTime.getDay();
+      const hourLoc = locTime.getHours();
+      const hourHome = homeTime.getHours();
+      if (dif === 0) {
+        return hourLoc - hourHome;
+      }
+      return (hourLoc - hourHome - 24) * -1;
     }
     return "";
   };
@@ -125,7 +133,6 @@ export const RowClock: FC<RowClockProps> = (props) => {
   };
 
   const resetPos = () => {
-    /*  sethoursArray(getHoursArray());*/
     if (locTime && homeTime && first) {
       let currentTime = locTime.getHours();
       let pos = getHoursArray().indexOf(currentTime);
@@ -162,16 +169,16 @@ export const RowClock: FC<RowClockProps> = (props) => {
         <Delete sx={{ color: "#000" }} fontSize="small" />
       </IconButton>
       {first ? (
-        <Home fontSize="small" />
+        <Home fontSize="small" sx={{ p: 1 }} />
       ) : (
-        <IconButton sx={{ color: "#000", p: 0 }} onClick={props.handleSetMain}>
+        <IconButton sx={{ color: "#000" }} onClick={props.handleSetMain}>
           <Typography align="center" variant="h6" sx={{ width: "20px" }}>
             {getDifference()}
           </Typography>
         </IconButton>
       )}
 
-      <Box sx={{ width: 180 }}>
+      <Box sx={{ width: 170 }}>
         <Typography sx={{ fontSize: "14px" }}>
           {location.element.label}
         </Typography>
@@ -180,7 +187,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
         </Typography>
       </Box>
 
-      <Box sx={{ width: 100 }}>
+      <Box sx={{ width: 110 }}>
         <Typography sx={{ fontSize: "14px" }}>
           {`${locTime?.toLocaleString("en-US", {
             hour: "numeric",
@@ -259,5 +266,5 @@ const RowContainer = styled(Box)(({ theme }) => ({
   height: 80,
   display: "flex",
   alignItems: "center",
-  gap: 25,
+  gap: 15,
 }));
