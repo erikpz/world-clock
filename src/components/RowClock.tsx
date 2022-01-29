@@ -241,15 +241,24 @@ export const RowClock: FC<RowClockProps> = (props) => {
             <Box
               sx={{
                 width: "100%",
+                height: 43,
                 bgcolor: getHourColor(n, "bg"),
                 color: getHourColor(n, "col"),
                 borderRadius: getBorders(n),
-                padding: "5px 0",
+                /* padding: "5px 0", */
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                marginLeft: n === 0 ? "4px" : 0,
               }}
             >
               <Typography
                 align="center"
-                sx={{ fontSize: "12px", fontWeight: 600 }}
+                sx={{
+                  fontSize: n === 0 ? "10px" : "14px",
+                  fontWeight: 600,
+                  my: n === 0 ? "2.5px" : 0,
+                }}
               >
                 {n === 0 ? getNextMonth() : convertTo12Hours(n)}
               </Typography>
