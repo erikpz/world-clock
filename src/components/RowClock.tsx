@@ -6,41 +6,31 @@ import { Delete, Home } from "@mui/icons-material";
 interface RowClockProps {
   location: any;
   handleRemove: any;
+  handleSetMain: any;
   homeLocation: any;
   setPos: any;
+  list: any;
   first?: boolean;
 }
 
-const RowContainer = styled(Box)(({ theme }) => ({
-  /* backgroundColor:'lightblue', */
-  height: 80,
-  display: "flex",
-  alignItems: "center",
-  gap: 25,
-}));
-
 export const RowClock: FC<RowClockProps> = (props) => {
-  const { location, handleRemove, homeLocation, first } = props;
+  const { location, handleRemove, homeLocation, first, list } = props;
   const [locTime, setlocTime] = useState<any>();
   const [homeTime, sethomeTime] = useState<any>();
   const ref = useRef<any>();
 
   const getDifference = () => {
+    /* Funcion para calcular la diferencia de hora entre la ciudad actual
+    y la ciudad principal */
     if (locTime && homeTime) {
       return Math.floor((locTime - homeTime) / (1000 * 60 * 60));
     }
     return "";
   };
 
-  const resetPos = () => {
-    if (locTime && first) {
-      let currentTime = locTime.getHours();
-      let pos = getHoursArray().indexOf(currentTime);
-      props.setPos(ref.current?.getBoundingClientRect().left + 25 * pos);
-    }
-  };
-
   const getHourColor = (num: number, prop: string) => {
+    /* Funcion para obtener el estilo de los colores de 
+    cada cajita de cada hora de la fila */
     if (prop === "bg") {
       if ([0, 1, 2, 3, 4, 5, 21, 22, 23].includes(num)) {
         return "black";
@@ -59,6 +49,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
   };
 
   const getBorders = (num: number) => {
+    /* Funcion para obtener el estilo de los border inicial y final de cada dia  */
     if (num === 23) {
       return "0 8px 8px 0";
     } else if (num === 0) {
@@ -67,23 +58,9 @@ export const RowClock: FC<RowClockProps> = (props) => {
     return 0;
   };
 
-  const getHoursArray = () => {
-    let hArr: number[] = [];
-    if (locTime && homeTime) {
-      let hour = first ? homeTime.getHours() : locTime.getHours();
-      for (let i = 0; i < 24; i++) {
-        if (hour + i > 23) {
-          hArr = [...hArr, hour + i - 24];
-        } else {
-          hArr = [...hArr, hour + i];
-        }
-      }
-      return hArr;
-    }
-    return hArr;
-  };
-
   const getNextDay = () => {
+    /* Funcion para obtener la hora actual o la siguiente dependiendo las fechas
+    y mostrarlo en la fila de las horas */
     const hrs = getHoursArray();
     if (hrs[0] === 0) {
       return locTime?.getDate();
@@ -91,7 +68,16 @@ export const RowClock: FC<RowClockProps> = (props) => {
     return locTime?.getDate() + 1;
   };
 
+  const convertTo12Hours = (h: number) => {
+    if (h > 12) {
+      return h - 12;
+    }
+    return h;
+  };
+
   const getNextMonth = () => {
+    /* Funcion para obtener el mes actual o el siguiente dependiendo las fechas
+    y mostrarlo en la fila de las horas */
     if (locTime) {
       const hrs = getHoursArray();
       const lastDayMonth = new Date(
@@ -120,7 +106,40 @@ export const RowClock: FC<RowClockProps> = (props) => {
     return "";
   };
 
+  const getHoursArray = () => {
+    /* Funcion para obtener el array de las 24 horas del dia
+    con el desplazamiento correspondiente con base en la fecha de la locacion principal */
+    let hArr: number[] = [];
+    if (locTime && homeTime) {
+      let hour = first ? homeTime.getHours() : locTime.getHours();
+      for (let i = 0; i < 24; i++) {
+        if (hour + i > 23) {
+          hArr = [...hArr, hour + i - 24];
+        } else {
+          hArr = [...hArr, hour + i];
+        }
+      }
+      return hArr;
+    }
+    return hArr;
+  };
+
+  const resetPos = () => {
+    /*  sethoursArray(getHoursArray());*/
+    if (locTime && homeTime && first) {
+      let currentTime = locTime.getHours();
+      let pos = getHoursArray().indexOf(currentTime);
+      props.setPos(ref.current?.getBoundingClientRect().left + 25 * pos);
+    }
+  };
+
   useEffect(() => {
+    resetPos();
+  }, [list, first, locTime]);
+
+  useEffect(() => {
+    /* Efecto unico e inicial para establecer la 
+    fecha de la locacion de cada fila y la de la principal (Referencia) */
     setlocTime(
       new Date(
         new Date(location.data.datetime).toLocaleString("en-US", {
@@ -135,11 +154,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
         })
       )
     );
-  }, []);
-
-  useEffect(() => {
-    resetPos();
-  }, [locTime, first]);
+  }, [location, homeLocation]);
 
   return (
     <RowContainer>
@@ -149,7 +164,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
       {first ? (
         <Home fontSize="small" />
       ) : (
-        <IconButton sx={{ color: "#000", p: 0 }}>
+        <IconButton sx={{ color: "#000", p: 0 }} onClick={props.handleSetMain}>
           <Typography align="center" variant="h6" sx={{ width: "20px" }}>
             {getDifference()}
           </Typography>
@@ -167,11 +182,11 @@ export const RowClock: FC<RowClockProps> = (props) => {
 
       <Box sx={{ width: 100 }}>
         <Typography sx={{ fontSize: "14px" }}>
-          {locTime?.toLocaleString("en-US", {
+          {`${locTime?.toLocaleString("en-US", {
             hour: "numeric",
             minute: "numeric",
             hour12: true,
-          })}
+          })} ${location.data.abbreviation}`}
         </Typography>
         <Typography variant="caption" sx={{ color: "#555" }}>
           {`${locTime?.toLocaleDateString("en-US", {
@@ -219,7 +234,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                 align="center"
                 sx={{ fontSize: "12px", fontWeight: 600 }}
               >
-                {n === 0 ? getNextMonth() : n}
+                {n === 0 ? getNextMonth() : convertTo12Hours(n)}
               </Typography>
               <Typography
                 sx={{
@@ -239,3 +254,10 @@ export const RowClock: FC<RowClockProps> = (props) => {
     </RowContainer>
   );
 };
+
+const RowContainer = styled(Box)(({ theme }) => ({
+  height: 80,
+  display: "flex",
+  alignItems: "center",
+  gap: 25,
+}));

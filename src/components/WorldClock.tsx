@@ -5,41 +5,6 @@ import { TimeService } from "../services/TimeService";
 import { areas } from "../utils/areas";
 import { RowClock } from "./RowClock";
 
-const Container = styled(Box)(({ theme }) => ({
-  width: "100%",
-}));
-
-const ClockContainer = styled(Box)(({ theme }) => ({
-  backgroundColor: theme.palette.background.paper,
-  width: 1000,
-  padding: "35px 25px",
-  margin: "30px auto",
-  borderRadius: 20,
-  boxShadow:
-    "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px",
-}));
-
-const InputSearch = styled(TextField)(({ theme }) => ({
-  "& label.Mui-focused": {
-    color: "white",
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: "white",
-  },
-  "& .MuiOutlinedInput-root": {
-    "& fieldset": {
-      borderColor: "white",
-    },
-    "&:hover fieldset": {
-      borderColor: "white",
-    },
-    "&.Mui-focused fieldset": {
-      borderColor: "#ddd",
-      borderRadius: 15,
-    },
-  },
-}));
-
 export const WorldClock: FC = () => {
   const [search, setsearch] = useState<any>(null);
   const [results, setresults] = useState<any>([]);
@@ -93,7 +58,14 @@ export const WorldClock: FC = () => {
     const newList = list.filter(
       (filt: any) => filt.element.label !== element.element.label
     );
-    setlist(newList);
+    setlist([...newList]);
+  };
+
+  const handleSetMain = (element: any) => {
+    const newList = list.filter(
+      (filt: any) => filt.element.label !== element.element.label
+    );
+    setlist([element, ...newList]);
   };
 
   useEffect(() => {
@@ -112,6 +84,10 @@ export const WorldClock: FC = () => {
     };
     fetchDefault();
   }, []);
+
+  useEffect(() => {
+    console.log(list);
+  }, [list]);
 
   return (
     <Container>
@@ -134,10 +110,7 @@ export const WorldClock: FC = () => {
         />
 
         {list.length > 0 && (
-          <Box
-            ref={refbox}
-            sx={{ /* bgcolor: "lightyellow", */ mt: 2, position: "relative" }}
-          >
+          <Box ref={refbox} sx={{ mt: 2, position: "relative" }}>
             {refbox.current && (
               <Box
                 sx={{
@@ -152,25 +125,61 @@ export const WorldClock: FC = () => {
                   top: 0,
                   backgroundColor: "rgba(244, 156, 118,0.3)",
                   left: mous - refbox.current.getBoundingClientRect().left,
-                  /* left: (x && x.offsetLeft) ?? 0, */
-                  /* left: mous - (x ? x.offsetWidth : 0) ?? 0, */
                 }}
               />
             )}
 
-            {list.map((location: any, index: number) => (
-              <RowClock
-                key={location.element.label}
-                first={index === 0}
-                homeLocation={list[0]}
-                location={location}
-                handleRemove={() => handleRemove(location)}
-                setPos={setmous}
-              />
-            ))}
+            {list.length > 0 &&
+              list.map((location: any, index: number) => (
+                <RowClock
+                  key={location.element.label}
+                  first={index === 0}
+                  homeLocation={list[0]}
+                  location={location}
+                  handleRemove={() => handleRemove(location)}
+                  handleSetMain={() => handleSetMain(location)}
+                  setPos={setmous}
+                  list={list}
+                />
+              ))}
           </Box>
         )}
       </ClockContainer>
     </Container>
   );
 };
+
+const Container = styled(Box)(({ theme }) => ({
+  width: "100%",
+}));
+
+const ClockContainer = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  width: 1000,
+  padding: "35px 25px",
+  margin: "30px auto",
+  borderRadius: 20,
+  boxShadow:
+    "rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px",
+}));
+
+const InputSearch = styled(TextField)(({ theme }) => ({
+  "& label.Mui-focused": {
+    color: "white",
+  },
+  "& .MuiInput-underline:after": {
+    borderBottomColor: "white",
+  },
+  "& .MuiOutlinedInput-root": {
+    "& fieldset": {
+      borderColor: "white",
+    },
+    "&:hover fieldset": {
+      borderColor: "white",
+    },
+    "&.Mui-focused fieldset": {
+      borderColor: "#ddd",
+      borderRadius: 15,
+    },
+  },
+}));
