@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
 import { Box, IconButton, Tooltip, Typography } from "@mui/material";
-import { Delete, Home } from "@mui/icons-material";
+import { ArrowUpwardTwoTone, Delete, Home } from "@mui/icons-material";
 
 interface RowClockProps {
   location: any;
@@ -17,6 +17,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
   const { location, handleRemove, homeLocation, first, list } = props;
   const [locTime, setlocTime] = useState<any>();
   const [homeTime, sethomeTime] = useState<any>();
+  const [changeIcon, setchangeIcon] = useState<any>(false);
   const ref = useRef<any>();
 
   const getDifference = () => {
@@ -171,15 +172,24 @@ export const RowClock: FC<RowClockProps> = (props) => {
       {first ? (
         <Home fontSize="small" sx={{ p: 1, color: "#323D48" }} />
       ) : (
-        <Tooltip title="Cambiar a principal" placement="top">
+        <Tooltip
+          title="Cambiar a principal"
+          placement="top"
+          onMouseOver={() => setchangeIcon(true)}
+          onMouseLeave={() => setchangeIcon(false)}
+        >
           <IconButton sx={{ color: "#323D48" }} onClick={props.handleSetMain}>
-            <Typography
-              align="center"
-              variant="h6"
-              sx={{ width: "20px", color: "#323D48" }}
-            >
-              {getDifference()}
-            </Typography>
+            {changeIcon ? (
+              <ArrowUpwardTwoTone sx={{ width: "20px" }} />
+            ) : (
+              <Typography
+                align="center"
+                variant="subtitle1"
+                sx={{ width: "20px", color: "#323D48" }}
+              >
+                {getDifference()}
+              </Typography>
+            )}
           </IconButton>
         </Tooltip>
       )}
