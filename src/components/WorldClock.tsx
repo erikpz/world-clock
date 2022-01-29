@@ -11,12 +11,6 @@ export const WorldClock: FC = () => {
   const [list, setlist] = useState<any>([]);
   const [mous, setmous] = useState<any>(0);
   const refbox = useRef<any>();
-  /* const hoursBox = refbox.current?.lastChild.lastChild ?? null;
-  if (hoursBox) {
-    const computed = window.getComputedStyle(hoursBox).getPropertyValue("width");
-    const computed = hoursBox.getBoundingClientRect();
-    console.log(computed);
-  } */
 
   const handleSearch = async (srch: string) => {
     let arr: any = [];

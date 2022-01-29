@@ -19,7 +19,7 @@ const App = () => {
       <Typography
         variant="h2"
         align="center"
-        sx={{ color: "#FFF", fontWeight: 800, width: "100%" }}
+        sx={{ color: "#FFF", fontWeight: 800, width: "100%", my: 2 }}
       >
         WorldTimeLite
       </Typography>
