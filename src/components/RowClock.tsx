@@ -249,7 +249,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "center",
-                marginLeft: n === 0 ? "4px" : 0,
+                marginLeft: n === 0 ? (i !== 0 ? "4px" : 0) : 0,
               }}
             >
               <Typography
