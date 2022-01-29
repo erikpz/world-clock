@@ -1,8 +1,34 @@
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: "border-box";
   font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
+*::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 6px;
+  background-color: #eee;
+}
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-thumb {
+  border: none;
+  border-radius: 8px;
+  background-color: rgba(128, 128, 128, 0.48);
+}
+
+html {
+  width: "100%";
+  height: "100%";
+  size-adjust: "100%";
+  width: "100%";
+  height: "100%";
+}
+
+body {
   background-color: #f49c76;
+  overflow-x: hidden;
 }

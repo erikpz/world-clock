@@ -10,6 +10,7 @@ const AppContainer = styled(Box)(({ theme }) => ({
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
+  overflowX: "auto",
 }));
 
 const App = () => {

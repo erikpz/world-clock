@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useRef, useState } from "react";
 import { styled } from "@mui/material/styles";
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, IconButton, Tooltip, Typography } from "@mui/material";
 import { Delete, Home } from "@mui/icons-material";
 
 interface RowClockProps {
@@ -23,15 +23,15 @@ export const RowClock: FC<RowClockProps> = (props) => {
     /* Funcion para calcular la diferencia de hora entre la ciudad actual
     y la ciudad principal */
     if (locTime && homeTime) {
-      /*  const dif = Math.floor((locTime - homeTime) / (1000 * 60 * 60));
-      return dif; */
       const dif = locTime.getDay() - homeTime.getDay();
       const hourLoc = locTime.getHours();
       const hourHome = homeTime.getHours();
       if (dif === 0) {
         return hourLoc - hourHome;
+      } else if (dif > 0) {
+        return hourLoc - hourHome - 24;
       }
-      return (hourLoc - hourHome - 24) * -1;
+      return (hourHome - hourLoc - 24) * -1;
     }
     return "";
   };
@@ -41,7 +41,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
     cada cajita de cada hora de la fila */
     if (prop === "bg") {
       if ([0, 1, 2, 3, 4, 5, 21, 22, 23].includes(num)) {
-        return "black";
+        return "#323D48";
       } else if ([6, 7, 18, 19, 20].includes(num)) {
         return "#DBEDFF";
       } else {
@@ -51,7 +51,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
       if ([0, 1, 2, 3, 4, 5, 21, 22, 23].includes(num)) {
         return "white";
       } else {
-        return "black";
+        return "#323D48";
       }
     }
   };
@@ -166,20 +166,28 @@ export const RowClock: FC<RowClockProps> = (props) => {
   return (
     <RowContainer>
       <IconButton onClick={handleRemove} sx={{ p: 0 }}>
-        <Delete sx={{ color: "#000" }} fontSize="small" />
+        <Delete sx={{ color: "#323D48" }} fontSize="small" />
       </IconButton>
       {first ? (
-        <Home fontSize="small" sx={{ p: 1 }} />
+        <Home fontSize="small" sx={{ p: 1, color: "#323D48" }} />
       ) : (
-        <IconButton sx={{ color: "#000" }} onClick={props.handleSetMain}>
-          <Typography align="center" variant="h6" sx={{ width: "20px" }}>
-            {getDifference()}
-          </Typography>
-        </IconButton>
+        <Tooltip title="Cambiar a principal" placement="top">
+          <IconButton sx={{ color: "#323D48" }} onClick={props.handleSetMain}>
+            <Typography
+              align="center"
+              variant="h6"
+              sx={{ width: "20px", color: "#323D48" }}
+            >
+              {getDifference()}
+            </Typography>
+          </IconButton>
+        </Tooltip>
       )}
 
       <Box sx={{ width: 170 }}>
-        <Typography sx={{ fontSize: "14px" }}>
+        <Typography
+          sx={{ fontSize: "14px", fontWeight: 600, color: "#323D48" }}
+        >
           {location.element.label}
         </Typography>
         <Typography variant="caption" sx={{ color: "#555" }}>
@@ -188,7 +196,9 @@ export const RowClock: FC<RowClockProps> = (props) => {
       </Box>
 
       <Box sx={{ width: 110 }}>
-        <Typography sx={{ fontSize: "14px" }}>
+        <Typography
+          sx={{ fontSize: "14px", fontWeight: 600, color: "#323D48" }}
+        >
           {`${locTime?.toLocaleString("en-US", {
             hour: "numeric",
             minute: "numeric",
@@ -248,7 +258,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
                   textAlign: "center",
                   display: "block",
                   fontWeight: 400,
-                  fontSize: "10px",
+                  fontSize: "9px",
                 }}
                 variant="caption"
               >
