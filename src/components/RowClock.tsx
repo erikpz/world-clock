@@ -144,6 +144,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
   useEffect(() => {
     resetPos();
     setchangeIcon(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [list, first, locTime]);
 
   useEffect(() => {
