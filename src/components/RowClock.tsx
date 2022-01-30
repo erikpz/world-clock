@@ -24,7 +24,14 @@ export const RowClock: FC<RowClockProps> = (props) => {
     /* Funcion para calcular la diferencia de hora entre la ciudad actual
     y la ciudad principal */
     if (locTime && homeTime) {
-      const dif = locTime.getDay() - homeTime.getDay();
+      let dif = (locTime.getTime() - homeTime.getTime()) / 1000;
+      dif /= 60 * 60;
+      dif = Math.floor(dif);
+      if (dif > 0) {
+        return dif;
+      }
+      return dif + 1;
+      /* const dif = locTime.getDay() - homeTime.getDay();
       const hourLoc = locTime.getHours();
       const hourHome = homeTime.getHours();
       if (dif === 0) {
@@ -32,7 +39,7 @@ export const RowClock: FC<RowClockProps> = (props) => {
       } else if (dif > 0) {
         return hourLoc - hourHome - 24;
       }
-      return (hourHome - hourLoc - 24) * -1;
+      return (hourHome - hourLoc - 24) * -1; */
     }
     return "";
   };
