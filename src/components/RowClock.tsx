@@ -79,15 +79,18 @@ export const RowClock: FC<RowClockProps> = (props) => {
   const getNextDay = () => {
     /* Funcion para obtener la hora actual o la siguiente dependiendo las fechas
     y mostrarlo en la fila de las horas */
-
     const hrs = getHoursArray();
     if (hrs[0] === 0) {
       return locTime?.getDate();
     }
-    if (locTime?.getDate() + 1 > 31) {
-      return 1;
-    }
-    return locTime?.getDate() + 1;
+    const nday = new Date(
+      locTime.getFullYear(),
+      locTime.getMonth(),
+      locTime.getDate()
+    );
+    nday.setDate(nday.getDate() + 1);
+
+    return nday?.getDate();
   };
 
   const convertTo12Hours = (h: number) => {
