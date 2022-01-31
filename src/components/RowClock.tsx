@@ -25,12 +25,14 @@ export const RowClock: FC<RowClockProps> = (props) => {
     y la ciudad principal */
     if (locTime && homeTime) {
       let dif = (locTime.getTime() - homeTime.getTime()) / 1000;
-      dif /= 60 * 60;
-      dif = Math.floor(dif);
-      if (dif > 0) {
-        return dif;
+      dif /= 60;
+      dif = Math.ceil(dif);
+
+      if (dif / 60 === 0) {
+        return dif / 60;
       }
-      return dif + 1;
+
+      return Math.floor(dif / 60);
       /* const dif = locTime.getDay() - homeTime.getDay();
       const hourLoc = locTime.getHours();
       const hourHome = homeTime.getHours();
